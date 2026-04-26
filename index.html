@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Impact Africa | Ecosystem Enabler</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    :root {
+      --brand-green: #34b78d;
+      --brand-green-dark: #2a9472;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--brand-green) 0%, #10b981 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .bg-brand {
+      background-color: var(--brand-green);
+    }
+
+    .text-brand {
+      color: var(--brand-green);
+    }
+
+    .border-brand {
+      border-color: var(--brand-green);
+    }
+
+    .hover-bg-brand:hover {
+      background-color: var(--brand-green-dark);
+    }
+
+    .bg-glass {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+    }
+
+    .card-hover {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+    }
+
+    .read-more-content {
+      display: none;
+    }
+
+    .read-more-content.expanded {
+      display: inline;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-content {
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Custom scrollbar for modal */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 10px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Interest Buttons */
+    .interest-btn {
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      background: white;
+      color: #64748b;
+      transition: all 0.2s;
+      text-align: center;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .interest-btn:hover {
+      border-color: var(--brand-green);
+      color: var(--brand-green);
+      background: #f0fdf9;
+    }
+
+    .interest-btn.selected {
+      border-color: var(--brand-green);
+      background: #f0fdf9;
+      color: var(--brand-green);
+    }
+
+    .form-input {
+      width: 100%;
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 15px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: 'Inter', sans-serif;
+      color: #0f172a;
+      box-sizing: border-box;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--brand-green);
+      box-shadow: 0 0 0 3px rgba(52, 183, 141, 0.12);
+    }
+
+    .form-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+
+    #success-box {
+      display: none;
+      background: #f0fdf9;
+      border: 2px solid var(--brand-green);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900 overflow-x-hidden">
+
+  <!-- Navigation -->
+  <nav class="fixed w-full z-50 bg-glass border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-20 items-center">
+        <!-- Logo Integration -->
+        <div class="flex items-center gap-3">
+          <svg width="45" height="45" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg"
+            class="shrink-0">
+            <path
+              d="M45 15C40 18 35 15 30 20C25 25 20 35 22 45C24 55 35 65 40 75C45 85 50 90 55 85C60 80 65 75 75 65C85 55 80 40 75 30C70 20 60 15 55 12C50 9 48 12 45 15Z"
+              fill="#34b78d" />
+            <circle cx="65" cy="45" r="15" stroke="white" stroke-width="4" />
+            <circle cx="65" cy="45" r="7" fill="white" />
+          </svg>
+          <div class="flex flex-col leading-none">
+            <span class="font-bold text-xs text-slate-500 uppercase tracking-widest">Social Impact</span>
+            <span class="font-black text-xl text-brand tracking-tighter">AFRICA</span>
+          </div>
+        </div>
+
+        <!-- Desktop Nav -->
+        <div class="hidden md:flex space-x-8 text-sm font-semibold text-slate-600">
+          <a href="#about" class="hover:text-brand transition-colors">About</a>
+          <a href="#approach" class="hover:text-brand transition-colors">Approach</a>
+          <a href="#team" class="hover:text-brand transition-colors">Team</a>
+          <a href="#portfolio" class="hover:text-brand transition-colors">Portfolio</a>
+          <a href="#contact"
+            class="bg-brand text-white px-6 py-2.5 rounded-full hover-bg-brand transition-all shadow-md">Get in
+            Touch</a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <div class="md:hidden">
+          <button id="mobile-menu-btn" class="p-2 text-slate-600">
+            <i data-lucide="menu"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- Mobile Nav Dropdown -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 py-6 space-y-4">
+      <a href="#about" class="block text-lg font-medium">About Us</a>
+      <a href="#approach" class="block text-lg font-medium">Approach</a>
+      <a href="#team" class="block text-lg font-medium">Team</a>
+      <a href="#portfolio" class="block text-lg font-medium">Portfolio</a>
+      <a href="#contact" class="block text-brand font-bold">Contact Us</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="max-w-3xl">
+        <span
+          class="inline-block px-4 py-1.5 mb-6 text-sm font-semibold tracking-wide text-brand uppercase bg-emerald-50 rounded-full border border-emerald-100">
+          Ecosystem Enabler
+        </span>
+        <h1 class="text-5xl lg:text-7xl font-extrabold tracking-tight text-slate-900 mb-8 leading-tight">
+          Building <span class="gradient-text">Purpose-Driven</span> Solutions.
+        </h1>
+        <p class="text-xl text-slate-600 mb-10 leading-relaxed">
+          We support bold ideas and early-stage founders to turn them into scalable, sustainable ventures addressing
+          real-world challenges across Africa and Asia.
+        </p>
+        <div class="flex flex-wrap gap-4">
+          <a href="#approach"
+            class="px-8 py-4 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-all flex items-center gap-2">
+            Our Approach <i data-lucide="arrow-right" class="w-5 h-5"></i>
+          </a>
+          <a href="#portfolio"
+            class="px-8 py-4 bg-white border border-slate-200 text-slate-900 rounded-xl font-semibold hover:bg-slate-50 transition-all">
+            View Portfolio
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- Decoration -->
+    <div class="absolute top-0 right-0 w-1/3 h-full opacity-10 pointer-events-none hidden lg:block">
+      <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="200" cy="200" r="150" stroke="#34b78d" stroke-width="2" />
+        <circle cx="200" cy="200" r="100" stroke="#34b78d" stroke-width="1" stroke-dasharray="8 8" />
+        <path d="M200 50V350M50 200H350" stroke="#34b78d" stroke-width="0.5" />
+      </svg>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="py-12 bg-brand text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div>
+          <div class="text-4xl font-bold mb-2">2020</div>
+          <div class="text-emerald-100 text-xs uppercase font-bold tracking-widest">Established</div>
+        </div>
+        <div>
+          <div class="text-4xl font-bold mb-2">80+</div>
+          <div class="text-emerald-100 text-xs uppercase font-bold tracking-widest">Founders Guided</div>
+        </div>
+        <div>
+          <div class="text-4xl font-bold mb-2">10+</div>
+          <div class="text-emerald-100 text-xs uppercase font-bold tracking-widest">Ventures Supported</div>
+        </div>
+        <div>
+          <div class="text-4xl font-bold mb-2">Global</div>
+          <div class="text-emerald-100 text-xs uppercase font-bold tracking-widest">Reach</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div class="space-y-8">
+          <h2 class="text-3xl font-bold text-slate-900">About Us</h2>
+          <p class="text-lg text-slate-600 leading-relaxed">
+            Social Impact Africa is an ecosystem enabler committed to supporting purpose-driven entrepreneurs building
+            solutions for real-world challenges across Africa and Asia.
+          </p>
+          <p class="text-lg text-slate-600 leading-relaxed">
+            We work at the intersection of innovation, entrepreneurship, and social impact—helping early-stage founders
+            transform ideas into scalable, sustainable ventures.
+          </p>
+
+          <div class="pt-8 border-t border-slate-100">
+            <h3 class="text-xl font-bold mb-4 text-brand">Our Story</h3>
+            <p class="text-slate-600">
+              Since 2020, we have been building and strengthening the social innovation ecosystem. What began as a
+              response to visible gaps has evolved into a platform that brings together mentorship, networks, and
+              strategic guidance across global markets.
+            </p>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="bg-slate-100 rounded-[2.5rem] overflow-hidden relative border-8 border-slate-50 shadow-2xl">
+            <img src="public/images/mamelodi.jpg" alt="Changemakers from Mamelodi, South Africa"
+              class="w-full h-auto transition-all duration-700 block">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section id="team" class="py-24 bg-slate-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-20">
+        <h2 class="text-4xl font-bold text-slate-900 mb-4">The People Behind the Vision</h2>
+        <p class="text-slate-600">A collective of experts working across Africa, Asia, and globally.</p>
+      </div>
+
+      <!-- Leadership -->
+      <div class="grid lg:grid-cols-1 gap-12 mb-20 max-w-5xl mx-auto">
+        <!-- Radhika Mia -->
+        <div class="bg-white p-8 lg:p-12 rounded-[2.5rem] border border-slate-200 shadow-sm">
+          <div class="flex flex-col md:flex-row gap-10 items-start">
+            <div
+              class="w-40 h-40 bg-emerald-100 rounded-3xl overflow-hidden shrink-0 flex items-center justify-center text-brand relative group">
+              <img src="/public/images/radhika.jpg" alt="Radhika Mia, PhD" class="w-full h-full object-cover" />
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <h3 class="text-3xl font-extrabold text-slate-900">Radhika Mia, PhD</h3>
+                  <p class="text-brand font-bold uppercase tracking-widest text-sm mt-1">Founder & CEO</p>
+                </div>
+                <!-- <a href="https://www.linkedin.com/in/radhika-mia-phd-25950315/" target="_blank" -->
+                <!--   class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-[#0077b5] hover:text-white transition-all"> -->
+                <!--   <i data-lucide="linkedin" class="w-5 h-5"></i> -->
+                <!-- </a> -->
+                <a href="https://www.linkedin.com/in/radhika-mia-phd-25950315/" target="_blank"
+                  class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-[#0077b5] hover:text-white transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M20.447 20.452H17.21v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.991V9h3.102v1.561h.046c.432-.817 1.487-1.679 3.062-1.679 3.274 0 3.878 2.155 3.878 4.958v6.612zM5.337 7.433a1.8 1.8 0 1 1 0-3.6 1.8 1.8 0 0 1 0 3.6zm1.603 13.019H3.734V9h3.206v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z" />
+                  </svg>
+                </a>
+              </div>
+              <p class="text-slate-700 leading-relaxed text-lg">
+                She is an ecosystem enabler working at the intersection of entrepreneurship, innovation, circular
+                design, and human-centered design, with experience across India, Europe, and Africa. She supports
+                founders in turning unclear ideas into grounded, actionable ventures.
+
+                <br><br>
+                She was part of the early team at CIIE (now IIMA Ventures) and founded Social Impact Africa in 2020,
+                guiding 60+ startups and collaborating with institutions including the University of Johannesburg, IITs,
+                MS University of Baroda, Navrachana University, and the University of Kashmir.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Viral Shah -->
+        <div class="bg-white p-8 lg:p-12 rounded-[2.5rem] border border-slate-200 shadow-sm">
+          <div class="flex flex-col md:flex-row gap-10 items-start">
+            <div
+              class="w-40 h-40 bg-slate-100 rounded-3xl overflow-hidden shrink-0 flex items-center justify-center text-slate-400">
+              <img src="/public/images/viral.png" alt="Virah Shah" class="w-full h-full object-cover" />
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <h3 class="text-3xl font-extrabold text-slate-900">Viral Shah</h3>
+                  <p class="text-brand font-bold uppercase tracking-widest text-sm mt-1">Director of Strategy and
+                    Operations</p>
+                </div>
+                <a href="https://www.linkedin.com/in/ca-viral-shah-abb09316a/" target="_blank"
+                  class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-[#0077b5] hover:text-white transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                      d="M20.447 20.452H17.21v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.991V9h3.102v1.561h.046c.432-.817 1.487-1.679 3.062-1.679 3.274 0 3.878 2.155 3.878 4.958v6.612zM5.337 7.433a1.8 1.8 0 1 1 0-3.6 1.8 1.8 0 0 1 0 3.6zm1.603 13.019H3.734V9h3.206v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z" />
+                  </svg>
+                </a>
+              </div>
+              <p class="text-slate-700 leading-relaxed text-lg">
+                He is a Chartered Accountant and Director at Social Impact Africa, working closely with startups as both
+                a financial mentor and hands-on partner to build sustainable, growth-oriented businesses.
+                <br><br>
+                He brings experience from PwC, grounding his work in financial discipline, compliance, and structured
+                advisory. He is also a Financial Mentor at Navrachana Innovation Foundation, supporting early-stage
+                innovators in building practical, scalable, and resilient financial models.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Jeremy Fritzhand -->
+        <div class="grid lg:grid-cols-1 gap-12 mb-20 max-w-5xl mx-auto">
+          <div class="bg-white p-8 lg:p-12 rounded-[2.5rem] border border-slate-200 shadow-sm">
+            <div class="flex flex-col md:flex-row gap-10 items-start">
+              <div
+                class="w-40 h-40 bg-emerald-100 rounded-3xl overflow-hidden shrink-0 flex items-center justify-center text-brand relative group">
+                <img src="/public/images/jeremy.jpg" alt="Jeremy Fritzhand" class="w-full h-full object-cover" />
+              </div>
+              <div class="flex-1">
+                <div class="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 class="text-3xl font-extrabold text-slate-900">Jeremy Fritzhand</h3>
+                    <p class="text-brand font-bold uppercase tracking-widest text-sm mt-1">Advisor at Social Impact
+                      Africa</p>
+                  </div>
+                  <a href="https://www.fritzhand.com/" target="_blank"
+                    class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 hover:bg-blue-600 hover:text-white transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                    </svg>
+                  </a>
+                </div>
+                <p class="text-slate-700 leading-relaxed text-lg">
+                  Jeremy Fritzhand is CEO at VentureStudio, Ahmedabad University, and Advisor at Social Impact Africa,
+                  with over 15 years of experience building startup ecosystems across incubation, founder support,
+                  social enterprise, and cross-sector collaboration.
+                  <br><br>
+                  His work spans entrepreneurial acceleration, university innovation, cultural preservation, and
+                  international trade—focused on building systems that help founders, institutions, and communities move
+                  from idea to durable outcomes. He believes ecosystems do not emerge on their own; they must be
+                  intentionally built through strong programs, relationships, partnerships, and operating structures.
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Associates -->
+        <h4 class="text-xs font-bold mb-10 text-center text-slate-400 uppercase tracking-[0.3em]">Our Associates</h4>
+        <div class="grid lg:grid-cols-2 gap-6 max-w-5xl mx-auto">
+          <div
+            class="h-full p-8 md:p-9 bg-white rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+            <div class="relative mb-6">
+              <div class="h-52 w-full rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
+                <img src="public/images/JesseNaidooAssociate .jpg" alt="Jesse Naidoo and Tammy Greyling"
+                  class="w-full h-full object-cover object-center">
+              </div>
+              <a href="https://clothestogood.com/" target="_blank" rel="noopener noreferrer"
+                class="absolute top-3 right-3 w-10 h-10 bg-white/95 border border-slate-200 rounded-full flex items-center justify-center text-slate-500 hover:text-brand hover:border-brand transition-all shadow-sm">
+                <i data-lucide="globe" class="w-5 h-5"></i>
+              </a>
+            </div>
+            <h5 class="text-2xl font-bold text-slate-900 mb-2">Jesse Naidoo & Tammy Greyling</h5>
+            <p class="text-brand font-semibold text-sm uppercase tracking-wide mb-5">Co-Founders of Clothes to Good</p>
+            <p class="text-slate-600 text-[15px] leading-7 mb-4">They are the founders of Clothes to Good, a South
+              African social enterprise that transforms textile waste into opportunities for people and the planet.
+            </p>
+            <p class="text-slate-600 text-[15px] leading-7">Their work focuses on recycling and upcycling clothing to
+              create jobs, support micro-enterprises, and
+              empower people with disabilities and vulnerable communities, partnering with organizations such as Levi’s
+              and H&M. Together, they have built an inclusive, circular ecosystem where waste becomes a tool for social
+              impact, bridging environmental sustainability with poverty alleviation.</p>
+          </div>
+          <div
+            class="h-full p-8 md:p-9 bg-white rounded-3xl border border-slate-200/80 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+            <div class="relative h-52 w-full rounded-2xl mb-6 overflow-hidden border border-slate-200 shadow-sm bg-slate-50">
+              <img src="public/images/Kumbukani.jpg" alt="Kumbukani Phiri"
+                class="w-full h-full object-contain object-center">
+              <a href="https://www.linkedin.com/in/kumbukani-phiri-81181a41/" target="_blank" rel="noopener noreferrer"
+                aria-label="Kumbukani Phiri profile link"
+                class="absolute top-3 right-3 w-10 h-10 bg-white/95 border border-slate-200 rounded-full flex items-center justify-center text-slate-500 hover:text-brand hover:border-brand transition-all shadow-sm">
+                <i data-lucide="globe" class="w-5 h-5"></i>
+              </a>
+            </div>
+            <h5 class="text-2xl font-bold text-slate-900 mb-2">Kumbukani Phiri</h5>
+            <p class="text-brand font-semibold text-sm uppercase tracking-wide mb-5">Associate - Malawi & Zimbabwe</p>
+            <p class="text-slate-600 text-[15px] leading-7 mb-4">He is the Founder of Transformation Africa and an
+              Associate with us in Malawi and Zimbabwe, focusing on youth empowerment and leadership development across
+              NGOs and community organisations.</p>
+            <p class="text-slate-600 text-[15px] leading-7">In partnership with World Education Bantwana Incorporated,
+              he
+              co-developed the Youth Work Readiness Program, which supports young people from vulnerable communities
+              with employability skills. His work is rooted in building locally grounded leadership models from an
+              African perspective.</p>
+          </div>
+        </div>
+
+        <!-- Partners -->
+        <div class="mt-24 pt-16 border-t border-slate-200">
+          <h4 class="text-xs font-bold mb-12 text-center text-slate-400 uppercase tracking-[0.3em]">Strategic Partners
+          </h4>
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 items-center">
+            <div
+              class="flex flex-col items-center justify-center grayscale opacity-50 hover:opacity-100 hover:grayscale-0 transition-all cursor-default">
+              <span
+                class="text-slate-800 font-bold text-center text-sm uppercase tracking-tighter leading-tight">University
+                of<br>Johannesburg</span>
+            </div>
+            <div
+              class="flex flex-col items-center justify-center grayscale opacity-50 hover:opacity-100 hover:grayscale-0 transition-all cursor-default">
+              <span class="text-slate-800 font-bold text-center text-sm uppercase">Barloworld CAT</span>
+            </div>
+            <div
+              class="flex flex-col items-center justify-center grayscale opacity-50 hover:opacity-100 hover:grayscale-0 transition-all cursor-default">
+              <span class="text-slate-900 font-black text-3xl tracking-tighter">SIX</span>
+            </div>
+            <div
+              class="flex flex-col items-center justify-center grayscale opacity-50 hover:opacity-100 hover:grayscale-0 transition-all cursor-default">
+              <span class="text-slate-800 font-bold text-center text-sm uppercase tracking-tight">Box Commerce</span>
+            </div>
+          </div>
+        </div>
+      </div>
+  </section>
+
+  <!-- Portfolio/Showcase Section -->
+  <section id="portfolio" class="py-24 bg-slate-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+        <div class="max-w-2xl">
+          <h2 class="text-4xl font-bold mb-4">Impact Showcase</h2>
+          <p class="text-slate-400">A curated look at the ventures we have supported across global sectors.</p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Summit -->
+        <div
+          class="bg-slate-800 rounded-[2.5rem] overflow-hidden border border-slate-700 group transition-all hover:border-brand">
+          <div class="h-72 md:h-80 relative overflow-hidden">
+            <img src="public/images/summit-2.png" alt="Social Impact Summit 2023"
+              class="absolute inset-0 w-full h-full object-contain object-center scale-110">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/15 to-transparent"></div>
+          </div>
+          <div class="p-8">
+            <h3 class="text-2xl font-bold text-white mb-4">Social Impact Summit 2023</h3>
+            <div class="flex items-center gap-2 text-brand text-xs font-bold mb-4 uppercase tracking-[0.2em]">
+              <i data-lucide="map-pin" class="w-4 h-4"></i> Landmark Gatherings
+            </div>
+            <p class="text-slate-300 mb-6">Explore pathways for building impactful, scalable ventures across emerging
+              markets in Africa and Asia.</p>
+            <div class="flex flex-wrap gap-2">
+              <span class="px-3 py-1 bg-slate-700 rounded-lg text-xs font-medium text-slate-300">Social
+                Innovation</span>
+              <span class="px-3 py-1 bg-slate-700 rounded-lg text-xs font-medium text-slate-300">Social Impact
+                Changemakers</span>
+            </div>
+          </div>
+        </div>
+        <!-- Portfolio Description -->
+        <div
+          class="bg-slate-800/40 rounded-[2.5rem] border-2 border-dashed border-slate-700 flex flex-col justify-center p-12 group hover:border-brand transition-all">
+          <div class="w-16 h-16 bg-brand/10 rounded-2xl flex items-center justify-center mb-8 text-brand">
+            <i data-lucide="globe" class="w-8 h-8"></i>
+          </div>
+          <h3 class="text-2xl font-bold mb-4">Portfolio Companies</h3>
+          <p class="text-slate-400 mb-10 text-lg leading-relaxed">
+            Showcasing early-stage ventures addressing humanity's most pressing challenges.
+          </p>
+          <button onclick="openPortfolioModal()"
+            class="px-10 py-4 bg-brand text-white rounded-full font-bold hover:bg-emerald-600 transition-all self-start shadow-lg shadow-emerald-900/20">
+            Explore Portfolio
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Portfolio Modal -->
+  <div id="portfolio-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 sm:p-6 lg:p-8">
+    <!-- Backdrop -->
+    <div onclick="closePortfolioModal()" class="absolute inset-0 bg-slate-900/90 backdrop-blur-sm"></div>
+
+    <!-- Content Area -->
+    <div
+      class="relative bg-white w-full max-w-5xl max-h-[90vh] rounded-[2.5rem] overflow-hidden flex flex-col shadow-2xl modal-content translate-y-10">
+      <!-- Header -->
+      <div class="p-8 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+        <div>
+          <h2 class="text-2xl font-extrabold text-slate-900">Portfolio & ventures</h2>
+          <p class="text-slate-500 text-sm">Empowering innovators across Africa and Asia</p>
+        </div>
+        <button onclick="closePortfolioModal()"
+          class="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-500">
+          <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+      <!-- Grid Content -->
+      <div class="p-8 overflow-y-auto custom-scrollbar">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Mama Kea -->
+          <div class="p-6 rounded-2xl bg-emerald-50 border border-emerald-100 group hover:shadow-md transition-all">
+            <div class="flex justify-between items-start mb-4">
+
+              <div
+                class="w-16 h-16 bg-white rounded-xl mb-4 flex items-center justify-center overflow-hidden border border-emerald-200">
+                <svg viewBox="0 0 100 100" class="w-12 h-12 text-slate-800">
+                  <path d="M50 20 L80 50 L50 80 L20 50 Z" fill="none" stroke="currentColor" stroke-width="4" />
+                  <path d="M20 20 L80 80 M80 20 L20 80" stroke="currentColor" stroke-width="2" />
+                </svg>
+              </div>
+
+              <a href="https://homegrownshandis.com/" target="_blank"
+                class="p-2 text-slate-400 hover:text-brand transition-colors">
+                <i data-lucide="external-link" class="w-5 h-5"></i>
+              </a>
+            </div>
+            <h4 class="text-xl font-bold text-slate-900 group-hover:text-brand transition-colors">Mama Kea</h4>
+            <p class="text-brand font-semibold text-xs uppercase tracking-wider mb-2">South Africa • Artisanal Design
+            </p>
+            <p class="text-slate-500 text-sm">Founded by Sicelo, a shoemaker who designs handmade Afro-centric shoes and
+              works closely with elderly women in South African communities who hold traditional crochet knowledge.</p>
+          </div>
+
+          <!-- Stellar Dynamics -->
+          <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100 group hover:shadow-md transition-all">
+            <div
+              class="w-16 h-16 bg-white rounded-xl mb-4 flex items-center justify-center text-indigo-600 border border-slate-200">
+              <i data-lucide="cpu" class="w-8 h-8"></i>
+            </div>
+            <h4 class="text-xl font-bold text-slate-900">Stellar Dynamics</h4>
+            <p class="text-indigo-600 font-semibold text-xs uppercase tracking-wider mb-2">India • Deep Tech Startup</p>
+            <p class="text-slate-500 text-sm">A team from the University of Kashmir, led by Murtaza Khan, advancing
+              frontier technologies in the global deep-tech sector, with potential applications in space, healthcare,
+              and energy..
+              <span class="block mt-1 font-medium text-slate-700 italic">Stage: Prototype
+                Development
+              </span>
+            </p>
+          </div>
+
+          <!-- Switch Electric -->
+          <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100 group hover:shadow-md transition-all">
+            <div class="flex justify-between items-start mb-4">
+              <div
+                class="w-16 h-16 bg-white rounded-xl flex items-center justify-center text-amber-500 border border-slate-200">
+                <i data-lucide="zap" class="w-8 h-8"></i>
+              </div>
+              <a href="https://switchelectric.in/" target="_blank"
+                class="p-2 text-slate-400 hover:text-brand transition-colors">
+                <i data-lucide="external-link" class="w-5 h-5"></i>
+              </a>
+            </div>
+            <h4 class="text-xl font-bold text-slate-900">Switch Electric</h4>
+            <p class="text-amber-600 font-semibold text-xs uppercase tracking-wider mb-2">India</p>
+            <p class="text-slate-500 text-sm">Produces e-cycle kits and battery solutions.</p>
+          </div>
+
+          <!-- Shifarah -->
+          <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100 group hover:shadow-md transition-all">
+            <div class="flex justify-between items-start mb-4">
+              <div class="w-16 h-16 bg-white rounded-xl flex items-center justify-center border border-slate-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10" viewBox="0 0 24 24" fill="#ef4444">
+                  <path
+                    d="M19 8h-4V4a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v4H5a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h4v4a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-4h4a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1z" />
+                </svg>
+              </div>
+              <a href="https://shifarah.com/" target="_blank"
+                class="p-2 text-slate-400 hover:text-brand transition-colors">
+                <i data-lucide="external-link" class="w-5 h-5"></i>
+              </a>
+            </div>
+            <h4 class="text-xl font-bold text-slate-900">Shifarah</h4>
+            <p class="text-rose-600 font-semibold text-xs uppercase tracking-wider mb-2">India</p>
+            <p class="text-slate-500 text-sm">An AI-driven, end-to-end healthcare platform.
+              <span class="block mt-1 font-medium text-slate-700 italic">Stage: Development of MVP</span>
+            </p>
+          </div>
+
+          <!-- Navrachana Innovation Foundation -->
+          <div
+            class="p-6 rounded-2xl bg-slate-50 border border-slate-100 group hover:shadow-md transition-all sm:col-span-2 lg:col-span-1">
+            <div class="flex justify-between items-start mb-4">
+              <div
+                class="w-16 h-16 bg-white rounded-xl flex items-center justify-center text-red-600 border border-slate-200 overflow-hidden">
+                <svg viewBox="0 0 100 100" class="w-12 h-12">
+                  <circle cx="50" cy="50" r="45" stroke="currentColor" stroke-width="2" fill="none" />
+                  <text x="50" y="58" text-anchor="middle" font-size="28" font-weight="bold"
+                    fill="currentColor">NIF</text>
+                </svg>
+              </div>
+              <a href="https://nuv.ac.in/innovation/" target="_blank"
+                class="p-2 text-slate-400 hover:text-brand transition-colors">
+                <i data-lucide="globe" class="w-5 h-5"></i>
+              </a>
+            </div>
+            <h4 class="text-xl font-bold text-slate-900">Navrachana Innovation Foundation</h4>
+            <p class="text-sky-600 font-semibold text-xs uppercase tracking-wider mb-2">India • Foundation</p>
+            <p class="text-slate-500 text-sm">We are mentoring 5-8 companies at various stages, incubated at Navrachna
+              University, guiding and helping them scale, grow, pivot or expand to new markets.</p>
+          </div>
+
+          <!-- Koraj Crafts -->
+          <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100 group hover:shadow-md transition-all">
+            <div class="flex justify-between items-start mb-4">
+              <div
+                class="w-16 h-16 bg-white rounded-xl flex items-center justify-center text-amber-500 border border-slate-200">
+                <img src="public/images/koraj.jpg" alt="Shifarah" class="w-full h-full object-contain p-1">
+              </div>
+              <a href="https://www.instagram.com/koraj_crafts" target="_blank"
+                class="p-2 text-slate-400 hover:text-brand transition-colors">
+                <i data-lucide="external-link" class="w-5 h-5"></i>
+              </a>
+            </div>
+            <h4 class="text-xl font-bold text-slate-900">Koraj Crafts</h4>
+            <p class="text-rose-600 font-semibold text-xs uppercase tracking-wider mb-2">India</p>
+            <p class="text-slate-500 text-sm">Founded by Ravi Raj, this social enterprise transforms waste banana stems
+              into sustainable, handmade paper and journals. They empower local tribal communities by teaching
+              traditional papermaking processes using banana fiber in Gujarat, India.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="p-6 bg-slate-50 border-t border-slate-100 text-center">
+        <p class="text-xs text-slate-400 uppercase tracking-widest font-bold">Total Portfolio: 80+ Startups Supported
+          Since 2020</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer / Contact Section -->
+  <footer id="contact" class="bg-white text-slate-900 pt-24 pb-12 border-t border-slate-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-20 mb-20">
+
+        <!-- Left: Info -->
+        <div>
+          <div class="flex items-center gap-3 mb-8">
+            <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M45 15C40 18 35 15 30 20C25 25 20 35 22 45C24 55 35 65 40 75C45 85 50 90 55 85C60 80 65 75 75 65C85 55 80 40 75 30C70 20 60 15 55 12C50 9 48 12 45 15Z"
+                fill="#34b78d" />
+              <circle cx="65" cy="45" r="15" stroke="white" stroke-width="4" />
+            </svg>
+            <span class="font-bold text-xl uppercase tracking-tighter">Social Impact <span
+                class="text-brand">Africa</span></span>
+          </div>
+          <h2 class="text-4xl font-extrabold mb-8 leading-tight">Let's build the future together.</h2>
+
+          <p class="text-lg text-slate-600 leading-relaxed mb-6">
+            Whether you're an early-stage founder, a potential partner, or simply curious about what we do — we'd love
+            to hear from you.
+          </p>
+
+          <div class="space-y-4">
+            <div class="flex items-start gap-3">
+              <i data-lucide="check-circle" class="w-5 h-5 text-brand mt-1 shrink-0"></i>
+              <p class="text-slate-600">Get mentorship and strategic guidance for your venture</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <i data-lucide="check-circle" class="w-5 h-5 text-brand mt-1 shrink-0"></i>
+              <p class="text-slate-600">Connect with a global network of changemakers across Africa and Asia</p>
+            </div>
+            <div class="flex items-start gap-3">
+              <i data-lucide="check-circle" class="w-5 h-5 text-brand mt-1 shrink-0"></i>
+              <p class="text-slate-600">Explore partnership opportunities that create lasting social impact</p>
+            </div>
+          </div>
+
+          <p class="mt-8 text-slate-500 text-sm italic">
+            "We don't just invest in ideas — we invest in people building a better world."
+          </p>
+        </div>
+
+        <!-- Right: Contact Form with Formspree -->
+        <div class="bg-slate-50 p-8 lg:p-12 rounded-[2.5rem] shadow-sm border border-slate-100">
+
+          <!-- Success State -->
+          <div id="success-box">
+            <div style="font-size:40px; margin-bottom:12px;">✅</div>
+            <h3 class="text-xl font-extrabold text-slate-900 mb-2">Message Sent!</h3>
+            <p class="text-slate-500 text-sm">Thanks for reaching out. We'll get back to you at
+              <strong>hello@social-impact.africa</strong> soon.
+            </p>
+          </div>
+
+          <!-- Form -->
+          <form id="contact-form" action="https://formspree.io/f/xwvayklv" method="POST" class="space-y-6">
+            <!-- Hidden fields -->
+            <input type="hidden" name="_subject" id="hidden-subject" value="New Inquiry — Social Impact Africa">
+            <input type="hidden" name="interest" id="hidden-interest" value="">
+
+            <!-- Name + Email row -->
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label class="form-label" for="cf-name">Your Name</label>
+                <input class="form-input" type="text" id="cf-name" name="name" placeholder="Jane Okafor" required>
+              </div>
+              <div>
+                <label class="form-label" for="cf-email">Your Email</label>
+                <input class="form-input" type="email" id="cf-email" name="email" placeholder="you@example.com"
+                  required>
+              </div>
+            </div>
+
+            <!-- Interest Selector -->
+            <div>
+              <label class="form-label">I'm interested in...</label>
+              <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+                <button type="button" class="interest-btn" onclick="selectInterest(this, 'Startup Support')">
+                  🚀<br>Startup Support
+                </button>
+                <button type="button" class="interest-btn" onclick="selectInterest(this, 'Partnership')">
+                  🤝<br>Partnership
+                </button>
+                <button type="button" class="interest-btn" onclick="selectInterest(this, 'General Inquiry')">
+                  💬<br>General Inquiry
+                </button>
+              </div>
+              <p id="interest-error" class="text-red-500 text-xs mt-2 hidden">Please select an area of interest.</p>
+            </div>
+
+            <!-- Message -->
+            <div>
+              <label class="form-label" for="cf-message">
+                Message <span class="text-slate-300 normal-case font-normal">(optional)</span>
+              </label>
+              <textarea class="form-input" id="cf-message" name="message" rows="3"
+                placeholder="Tell us a bit about what you're working on..." style="resize:vertical;"></textarea>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" id="submit-btn"
+              class="w-full bg-brand text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-emerald-200"
+              style="font-family:'Inter',sans-serif; font-size:15px; border:none; cursor:pointer;"
+              onmouseover="this.style.backgroundColor='#2a9472'" onmouseout="this.style.backgroundColor='#34b78d'">
+              Send Message →
+            </button>
+
+          </form>
+        </div>
+      </div>
+
+      <div
+        class="pt-12 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-6 text-xs font-bold text-slate-400 uppercase tracking-widest">
+        <p>&copy; 2024 Social Impact Africa. Ecosystem Enabling across Africa & Asia.</p>
+        <div class="flex gap-8">
+          <a href="#" class="hover:text-brand">Privacy</a>
+          <a href="#" class="hover:text-brand">Terms</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    // ── Portfolio Modal ──────────────────────────────────────────
+    const portfolioModal = document.getElementById('portfolio-modal');
+    const modalContent = portfolioModal.querySelector('.modal-content');
+
+    function openPortfolioModal() {
+      portfolioModal.classList.remove('hidden');
+      portfolioModal.classList.add('flex');
+      setTimeout(() => {
+        modalContent.classList.remove('translate-y-10');
+        modalContent.classList.add('translate-y-0');
+      }, 10);
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePortfolioModal() {
+      modalContent.classList.add('translate-y-10');
+      modalContent.classList.remove('translate-y-0');
+      setTimeout(() => {
+        portfolioModal.classList.add('hidden');
+        portfolioModal.classList.remove('flex');
+        document.body.style.overflow = 'auto';
+      }, 300);
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closePortfolioModal();
+    });
+
+    // ── Read More ────────────────────────────────────────────────
+    function toggleReadMore(id, btn) {
+      const content = document.getElementById(id);
+      if (content.classList.contains('expanded')) {
+        content.classList.remove('expanded');
+        btn.textContent = 'Read more';
+      } else {
+        content.classList.add('expanded');
+        btn.textContent = 'Show less';
+      }
+    }
+
+    // ── Mobile Menu ──────────────────────────────────────────────
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+    // ── Scroll Animations ────────────────────────────────────────
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('opacity-100', 'translate-y-0');
+          entry.target.classList.remove('opacity-0', 'translate-y-10');
+        }
+      });
+    }, {threshold: 0.1});
+
+    document.querySelectorAll('section').forEach(section => {
+      section.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-10');
+      observer.observe(section);
+    });
+
+    // ── Contact Form ─────────────────────────────────────────────
+    let selectedInterest = '';
+
+    function selectInterest(btn, value) {
+      document.querySelectorAll('.interest-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedInterest = value;
+      document.getElementById('hidden-interest').value = value;
+      document.getElementById('hidden-subject').value = '[' + value + '] New Inquiry — Social Impact Africa';
+      document.getElementById('interest-error').classList.add('hidden');
+    }
+
+    document.getElementById('contact-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      // Validate interest selection
+      if (!selectedInterest) {
+        document.getElementById('interest-error').classList.remove('hidden');
+        return;
+      }
+
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+
+      const formData = new FormData(this);
+
+      try {
+        const response = await fetch(this.action, {
+          method: 'POST',
+          body: formData,
+          headers: {'Accept': 'application/json'}
+        });
+
+        if (response.ok) {
+          // Show success, hide form
+          document.getElementById('contact-form').style.display = 'none';
+          document.getElementById('success-box').style.display = 'block';
+        } else {
+          btn.disabled = false;
+          btn.textContent = 'Send Message →';
+          alert('Something went wrong. Please email us directly at hello@social-impact.africa');
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.textContent = 'Send Message →';
+        alert('Network error. Please try again or email hello@social-impact.africa');
+      }
+    });
+  </script>
+</body>
+
+</html>
